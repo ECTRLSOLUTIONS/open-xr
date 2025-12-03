@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://blo3k73qvoj7o"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_syxtb"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_144im"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="PickableObject" type="RigidBody3D"]
+freeze = true
+freeze_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_syxtb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_144im")

@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://yh4oug4ol222"]
+
+[ext_resource type="Script" uid="uid://cwp13ae37p1kq" path="res://demos/step_3_scene_mesch/main_mesh.gd" id="1_yamwv"]
+[ext_resource type="PackedScene" uid="uid://5mibalw1o2jc" path="res://demos/step_3_scene_mesch/pickable_object_sphere.tscn" id="2_5b72j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yu5ic"]
+
+[sub_resource type="Sky" id="Sky_vwqiv"]
+
+[sub_resource type="Environment" id="Environment_yu5ic"]
+background_mode = 2
+sky = SubResource("Sky_vwqiv")
+sky_custom_fov = 31.3
+ambient_light_color = Color(0.8418729, 0.34854493, 0.20999295, 1)
+ambient_light_energy = 15.7
+
+[node name="XROrigin3D" type="XROrigin3D" node_paths=PackedStringArray("pickables_container")]
+script = ExtResource("1_yamwv")
+pickables_container = NodePath("Pickable")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.395803)
+
+[node name="XRNode3D2" type="XRNode3D" parent="."]
+tracker = &"/user/hand_tracker/right"
+show_when_tracked = true
+
+[node name="Skeleton3D2" type="Skeleton3D" parent="XRNode3D2"]
+
+[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D2/Skeleton3D2"]
+hand = 1
+material = SubResource("StandardMaterial3D_yu5ic")
+bones/0/name = "RightPalm"
+bones/1/name = "RightHand"
+bones/2/name = "RightThumbMetacarpal"
+bones/3/name = "RightThumbProximal"
+bones/4/name = "RightThumbDistal"
+bones/5/name = "RightThumbTip"
+bones/6/name = "RightIndexMetacarpal"
+bones/7/name = "RightIndexProximal"
+bones/8/name = "RightIndexIntermediate"
+bones/9/name = "RightIndexDistal"
+bones/10/name = "RightIndexTip"
+bones/11/name = "RightMiddleMetacarpal"
+bones/12/name = "RightMiddleProximal"
+bones/13/name = "RightMiddleIntermediate"
+bones/14/name = "RightMiddleDistal"
+bones/15/name = "RightMiddleTip"
+bones/16/name = "RightRingMetacarpal"
+bones/17/name = "RightRingProximal"
+bones/18/name = "RightRingIntermediate"
+bones/19/name = "RightRingDistal"
+bones/20/name = "RightRingTip"
+bones/21/name = "RightLittleMetacarpal"
+bones/22/name = "RightLittleProximal"
+bones/23/name = "RightLittleIntermediate"
+bones/24/name = "RightLittleDistal"
+bones/25/name = "RightLittleTip"
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D2/Skeleton3D2/OpenXRFbHandTrackingMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00320235, 0, 0)
+hand_tracker = &"/user/hand_tracker/right"
+
+[node name="XRNode3D" type="XRNode3D" parent="."]
+tracker = &"/user/hand_tracker/left"
+show_when_tracked = true
+
+[node name="Skeleton3D2" type="Skeleton3D" parent="XRNode3D"]
+
+[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D"]
+
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D/OpenXRFbHandTrackingMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00320235, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_yu5ic")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9984679, -0.0010873652, 0.055322878, -0.055333562, -0.019620989, 0.99827516, 3.8008446e-10, -0.9998069, -0.019651094, 0, 16.122055, 0)
+light_color = Color(0.56078434, 0.5176471, 0.7882353, 1)
+light_energy = 2.971
+
+[node name="Pickable" type="Node3D" parent="."]
+
+[node name="PickableObject" parent="Pickable" instance=ExtResource("2_5b72j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.014716864, 0, -0.15442967)

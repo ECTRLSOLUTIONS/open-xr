@@ -1,0 +1,16 @@
+# Godot specific
+.godot/
+.import/
+export_presets.cfg
+
+# Plugins (User must install these via AssetLib)
+addons/godot-xr-tools/
+addons/godotopenxrvendors/
+
+# Android build files
+android
+
+# OS generated
+.DS_Store
+Thumbs.db
+*.apk

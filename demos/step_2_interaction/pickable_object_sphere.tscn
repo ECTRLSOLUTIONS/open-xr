@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckgi4mg5a11p3"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rkkfx"]
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_jhrh4"]
+radius = 0.1
+height = 0.2
+
+[node name="PickableObject" type="RigidBody3D"]
+freeze = true
+freeze_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_rkkfx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_jhrh4")

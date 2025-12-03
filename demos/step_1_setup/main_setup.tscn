@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1videexq2jix"]
+
+[ext_resource type="Script" uid="uid://dpoie5k2744jc" path="res://demos/step_1_setup/main_setup.gd" id="1_ojcpv"]
+
+[sub_resource type="Sky" id="Sky_vwqiv"]
+
+[sub_resource type="Environment" id="Environment_yu5ic"]
+background_mode = 2
+sky = SubResource("Sky_vwqiv")
+sky_custom_fov = 31.3
+ambient_light_color = Color(0.8418729, 0.34854493, 0.20999295, 1)
+ambient_light_energy = 15.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sign"]
+roughness = 0.6
+
+[sub_resource type="QuadMesh" id="QuadMesh_sign"]
+size = Vector2(1.35, 0.7)
+
+[node name="XROrigin3D" type="XROrigin3D"]
+script = ExtResource("1_ojcpv")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.395803)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_yu5ic")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9984679, -0.0010873652, 0.055322878, -0.055333562, -0.019620989, 0.99827516, 3.8008446e-10, -0.9998069, -0.019651094, 0, 16.122055, 0)
+light_color = Color(0.56078434, 0.5176471, 0.7882353, 1)
+light_energy = 2.971
+
+[node name="InstructionSign" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, -1)
+
+[node name="SignBoard" type="MeshInstance3D" parent="InstructionSign"]
+material_override = SubResource("StandardMaterial3D_sign")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_sign")
+
+[node name="InstructionLabel" type="Label3D" parent="InstructionSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01999998)
+pixel_size = 0.0016
+text = "First demo of the Godot OpenXR setup 
+using Passthrough for Mixed Reality (MR)."
