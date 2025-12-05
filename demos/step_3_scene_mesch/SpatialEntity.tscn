@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqe6cgd85pw66"]
+
+[ext_resource type="Script" uid="uid://chsdk1e0eyssk" path="res://demos/step_3_scene_mesch/SpatialEntity.gd" id="1_c7187"]
+
+[node name="SpatialEntity" type="StaticBody3D"]
+script = ExtResource("1_c7187")
