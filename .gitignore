@@ -14,3 +14,7 @@ android
 .DS_Store
 Thumbs.db
 *.apk
+
+# Temporary files
+*.tmp
+todo.md

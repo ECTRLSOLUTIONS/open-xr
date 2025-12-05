@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bk0dwwayaa0bf"]
+
+[ext_resource type="Script" uid="uid://b2dxykox0n0e" path="res://demos/step_3_scene_mesch/RoomManager.gd" id="1_rq2a0"]
+
+[node name="RoomManager" type="Node3D"]
+script = ExtResource("1_rq2a0")

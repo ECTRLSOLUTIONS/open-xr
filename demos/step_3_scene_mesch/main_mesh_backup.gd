@@ -63,24 +63,34 @@ func _get_closest_pickable(tip_pos: Vector3) -> RigidBody3D:
 				min_dist = dist
 				closest = child
 	return closest
-
-func _get_radius(body: RigidBody3D) -> float:
-	var radius = 0.1 # Default fallback
 	
+func _get_radius(body: RigidBody3D) -> float:
+	var radius = 0.0
+		
+# 1. Cerca prima nelle CollisionShape (per forme primitive precise)
 	for child in body.get_children():
 		if child is CollisionShape3D and child.shape:
 			var shape = child.shape
 			if shape is SphereShape3D:
-				radius = shape.radius
+				radius = max(radius, shape.radius)
 			elif shape is BoxShape3D:
-				radius = max(shape.size.x, max(shape.size.y, shape.size.z)) * 0.5
-			elif shape is CapsuleShape3D:
-				radius = max(shape.radius, shape.height * 0.5)
-			elif shape is CylinderShape3D:
-				radius = max(shape.radius, shape.height * 0.5)
-			break
-			
-	# Apply object scale (assuming uniform scale for simplicity)
+				radius = max(radius, max(shape.size.x, max(shape.size.y, shape.size.z)) * 0.5)
+			elif shape is CapsuleShape3D or shape is CylinderShape3D:
+				radius = max(radius, max(shape.radius, shape.height * 0.5))
+				
+	# 2. Se non ha trovato primitive (es. è una mesh complessa importata), usa il Bounding Box della Mesh
+	if radius == 0.0:
+		for child in body.get_children():
+			if child is MeshInstance3D:
+				var aabb = child.get_aabb()
+				# Prende la dimensione massima dell'AABB come raggio approssimativo
+				radius = max(radius, max(aabb.size.x, max(aabb.size.y, aabb.size.z)) * 0.5)
+
+	# 3. Fallback di sicurezza
+	if radius == 0.0:
+		radius = 0.1 
+		
+	# Applica la scala dell'oggetto
 	return radius * body.scale.x
 
 func _grab_object(obj: RigidBody3D, tip_pos: Vector3):

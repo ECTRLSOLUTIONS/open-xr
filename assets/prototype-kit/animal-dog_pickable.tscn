@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmqub5mjoln3a"]
+
+[ext_resource type="PackedScene" uid="uid://ckw0ml8thf5np" path="res://assets/prototype-kit/animal-dog.glb" id="1_7hkqv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mdhey"]
+
+[node name="animal-dog" type="RigidBody3D"]
+freeze = true
+freeze_mode = 1
+
+[node name="animal-dog2" parent="." instance=ExtResource("1_7hkqv")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_mdhey")

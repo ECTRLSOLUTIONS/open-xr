@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="demo_1_start"
-run/main_scene="uid://yh4oug4ol222"
+run/main_scene="uid://dqsrh441corjg"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://xy4q5whimlqq"
 run/name="demo_1_start"
@@ -23,7 +23,7 @@ XRToolsRumbleManager="*res://addons/godot-xr-tools/rumble/rumble_manager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addons/pickable_creator/plugin.cfg")
 
 [rendering]
 

@@ -85,14 +85,3 @@ This workshop demonstrates an architecture that is not "locked" to a single head
 
 ---
 *For more information on Godot XR, visit the [Official Documentation](https://docs.godotengine.org/en/stable/tutorials/xr/index.html).*
-
-
-
-## Other useful staff
-https://github.com/levinzonr/godot-asset-placer
-
-## ADB Command
-
-### Stop and check the demo
-adb shell am force-stop com.example.demo_1_start
-adb shell dumpsys window | grep -E 'mCurrentFocus|mFocusedApp'

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnrvd2yp1xlsq"]
+
+[ext_resource type="PackedScene" uid="uid://dppk5drp0c28n" path="res://assets/prototype-kit/animal-horse.glb" id="1_gy2ml"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0c0ym"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="animal-horse" type="RigidBody3D"]
+freeze = true
+freeze_mode = 1
+
+[node name="animal-horse2" type="Node3D" parent="." instance=ExtResource("1_gy2ml")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_0c0ym")
