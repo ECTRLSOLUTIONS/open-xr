@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://5mibalw1o2jc"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_rkkfx"]
-radius = 0.1
+radius = 0.102685004
 
 [sub_resource type="SphereMesh" id="SphereMesh_jhrh4"]
 radius = 0.1

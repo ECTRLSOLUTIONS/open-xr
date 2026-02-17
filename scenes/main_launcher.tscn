@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://b48xjv4f524bb"]
+
+[ext_resource type="Script" uid="uid://dgy4ukqwkpfj3" path="res://scenes/main_launcher.gd" id="1_7r2nv"]
+
+[sub_resource type="Sky" id="Sky_cje8c"]
+
+[sub_resource type="Environment" id="Environment_qcv56"]
+background_mode = 2
+sky = SubResource("Sky_cje8c")
+sky_custom_fov = 30.0
+ambient_light_color = Color(0.8509804, 0.88235295, 0.92941177, 1)
+ambient_light_energy = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_board"]
+albedo_color = Color(0.06666667, 0.07450981, 0.09803922, 1)
+roughness = 0.78
+
+[sub_resource type="QuadMesh" id="QuadMesh_board"]
+size = Vector2(1.5, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_button"]
+size = Vector3(0.49711424, 0.11, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_button"]
+albedo_color = Color(0.18431373, 0.23921569, 0.34117648, 1)
+roughness = 0.48
+
+[sub_resource type="BoxMesh" id="BoxMesh_button"]
+size = Vector3(0.6, 0.11, 0.02)
+
+[node name="XROrigin3D" type="XROrigin3D" unique_id=473608442]
+script = ExtResource("1_7r2nv")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1805099448]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=203411141]
+environment = SubResource("Environment_qcv56")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=495440779]
+transform = Transform3D(0.9293313, -0.0035760365, 0.371558, -0.23510063, 0.76999336, 0.5942493, -0.28822225, -0.6396081, 0.7133109, 0, 2.71285, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="LauncherBoard" type="Node3D" parent="." unique_id=559269562]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -1.35)
+
+[node name="BoardMesh" type="MeshInstance3D" parent="LauncherBoard" unique_id=1065399249]
+material_override = SubResource("StandardMaterial3D_board")
+mesh = SubResource("QuadMesh_board")
+metadata/_edit_lock_ = true
+
+[node name="TitleLabel" type="Label3D" parent="LauncherBoard" unique_id=107885627]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00085291266, 0.31000006, 0.014999986)
+pixel_size = 0.0019
+text = "OpenXR Demo Launcher"
+
+[node name="StatusLabel" type="Label3D" parent="LauncherBoard" unique_id=57479846]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00085291266, 0.24000001, 0.014999986)
+pixel_size = 0.0016
+modulate = Color(0.84705883, 0.9019608, 1, 1)
+text = "Look at a button and pinch to open"
+
+[node name="Buttons" type="Node3D" parent="LauncherBoard" unique_id=857086692]
+
+[node name="Demo1Button" type="Area3D" parent="LauncherBoard/Buttons" unique_id=860221753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.06, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LauncherBoard/Buttons/Demo1Button" unique_id=151939146]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0014428496, -0.019671917, 0)
+shape = SubResource("BoxShape3D_button")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="LauncherBoard/Buttons/Demo1Button" unique_id=1152697157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.019671917, 0)
+material_override = SubResource("StandardMaterial3D_button")
+mesh = SubResource("BoxMesh_button")
+
+[node name="ButtonText" type="Label3D" parent="LauncherBoard/Buttons/Demo1Button" unique_id=1806247837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.005236745, -0.019484282, 0.029999971)
+pixel_size = 0.0015
+text = "Demo 1 - Setup"
+
+[node name="Demo2Button" type="Area3D" parent="LauncherBoard/Buttons" unique_id=948130504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.06, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LauncherBoard/Buttons/Demo2Button" unique_id=1827574873]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.019671917, 0)
+shape = SubResource("BoxShape3D_button")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="LauncherBoard/Buttons/Demo2Button" unique_id=1902894702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.019671917, 0)
+material_override = SubResource("StandardMaterial3D_button")
+mesh = SubResource("BoxMesh_button")
+
+[node name="ButtonText" type="Label3D" parent="LauncherBoard/Buttons/Demo2Button" unique_id=873535347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0022875965, -0.022262812, 0.029999971)
+pixel_size = 0.0015
+text = "Demo 2 - Interaction"
+
+[node name="Demo3Button" type="Area3D" parent="LauncherBoard/Buttons" unique_id=1497332444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, -0.12, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LauncherBoard/Buttons/Demo3Button" unique_id=1579911863]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08852279, 0)
+shape = SubResource("BoxShape3D_button")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="LauncherBoard/Buttons/Demo3Button" unique_id=2102969969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00093716383, -0.08986187, 0)
+material_override = SubResource("StandardMaterial3D_button")
+mesh = SubResource("BoxMesh_button")
+
+[node name="ButtonText" type="Label3D" parent="LauncherBoard/Buttons/Demo3Button" unique_id=1639322461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002495706, -0.08740902, 0.029999971)
+pixel_size = 0.0015
+text = "Demo 3 - Scene Mesh"
+
+[node name="Demo4Button" type="Area3D" parent="LauncherBoard/Buttons" unique_id=145652573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, -0.12, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LauncherBoard/Buttons/Demo4Button" unique_id=1322077778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08852279, 0)
+shape = SubResource("BoxShape3D_button")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="LauncherBoard/Buttons/Demo4Button" unique_id=1585404476]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08852279, 0)
+material_override = SubResource("StandardMaterial3D_button")
+mesh = SubResource("BoxMesh_button")
+
+[node name="ButtonText" type="Label3D" parent="LauncherBoard/Buttons/Demo4Button" unique_id=1390827584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0011868477, -0.09018755, 0.029999971)
+pixel_size = 0.0015
+text = "Demo 4 - Spatial"

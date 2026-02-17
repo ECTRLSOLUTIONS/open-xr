@@ -1,87 +1,89 @@
 # Godot Engine XR: Passthrough & Interaction Workshop 🥽
 
-![Godot XR](https://img.shields.io/badge/Godot-4.5+-blue?logo=godotengine)
+![Godot XR](https://img.shields.io/badge/Godot-4.6.1-blue?logo=godotengine)
 ![OpenXR](https://img.shields.io/badge/XR-OpenXR-red)
-![Platform](https://img.shields.io/badge/Platform-Quest%20%7C%20AndroidXR-green)
+![Vendors Plugin](https://img.shields.io/badge/godotopenxrvendors-4.3.0-green)
 
-This repository contains a progressive workshop to learn Mixed Reality (MR) development with **Godot Engine 4.5+**, focusing on **OpenXR**, Passthrough, and spatial interaction.
+This repository contains a progressive workshop for Mixed Reality (MR) development with **Godot Engine 4.6.1**, focused on **OpenXR**, passthrough, scene understanding, and spatial interaction.
 
-The project is designed to be **vendor-neutral**, leveraging the official OpenXR standard to ensure compatibility with Meta Quest, Pico 4, and the upcoming **Android XR ecosystem** (Samsung Galaxy XR, Project Aura).
+The project is designed to stay **vendor-neutral** as much as possible, while still using vendor extensions where needed through **godotopenxrvendors 4.3.0**.
 
-## 🚀 Project Goals
+## 🚀 Project goals
 
-1.  **Standard OpenXR Workflow:** Avoid proprietary SDKs where possible.
-2.  **Mixed Reality:** Learn to blend virtual objects with the real world (Passthrough).
-3.  **Future-Proofing:** Prepare for the upcoming Android XR devices by using the latest Godot 4.5 OpenXR Vendors plugin.
+1. **Standard OpenXR workflow:** avoid lock-in to a single proprietary SDK.
+2. **Mixed Reality:** blend virtual objects with the physical world (passthrough + spatial context).
+3. **Future-proof architecture:** target Quest today and remain ready for Android XR and upcoming OpenXR spatial features.
 
-## 📂 Demo Overview
+## 📂 Demo overview
 
-The project is a single Godot project divided into 3 progressive scenes located in the `demos/` folder:
+Current demos are in `demos/`:
 
 ### 1. 🟢 Demo 1: Hello Passthrough
-*   **Goal:** Basic Setup.
-*   **Features:**
-	*   Configuring `XROrigin3D` for Passthrough (transparent background).
-	*   Placing a simple static virtual object in the real world.
-	*   No complex interactions.
+- **Goal:** base setup.
+- **Features:**
+  - `XROrigin3D` passthrough configuration.
+  - A first static virtual object in real space.
 
-### 2. 🟡 Demo 2: Hand Interaction
-*   **Goal:** Physics and Hand Tracking.
-*   **Features:**
-	*   Visualizing hands without controllers.
-	*   **Custom Pinch-to-Grab logic:** Interact with a floating sphere using your thumb and index finger.
-	*   Physics manipulation (kinematic freezing/unfreezing).
+### 2. 🟡 Demo 2: Hand interaction
+- **Goal:** hand-based interaction + physics.
+- **Features:**
+  - Hands without controllers.
+  - Custom pinch-to-grab logic.
+  - Basic rigidbody handling (freeze/unfreeze during grab).
 
-### 3. 🔴 Demo 3: Scene Understanding (Spatial Awareness)
-*   **Goal:** Interacting with the Physical Environment.
-*   **Features:**
-	*   Scanning the room (Mesh/Scene API).
-	*   Placing virtual furniture (KenneyNL assets) that snaps to real-world floors or tables.
-	*   Demonstrating how digital content persists in the physical space.
+### 3. 🔴 Demo 3: Scene understanding
+- **Goal:** interact with the physical environment.
+- **Features:**
+  - Room scan / scene mesh usage.
+  - Objects aligned with real-world floors/tables.
+  - Initial integration of physical collisions with room data.
 
----
+### 4. 🧭 Demo 4: Spatial entities + QR anchor
+- **Goal:** detect a marker and anchor one or more 3D models to it.
+- **Requirements draft:** `demos/step_4_spatial_entities/requirements.md`.
+- **Current implementation scene:** `demos/step_4_spatial_entities/main_spatial_entities.tscn`.
 
-## 🛠️ Prerequisites & Installation
+## 🛠️ Prerequisites & installation
 
-**⚠️ IMPORTANT:** To keep this repository lightweight, the required plugins are NOT included in the repo. You must download them manually.
+IMPORTANT: this repo does not include all required plugins to keep the project lightweight.
 
 ### 1. Requirements
-*   **Godot Engine 4.5** 
-*   **Hardware:** Meta Quest 3 (or an Android XR compatible device).
-*   **Connection:** USB-C cable for debugging or AirLink.
-*   **Android Environment:** Android SDK/NDK installed (or Android Studio).
+- **Godot Engine:** `4.6.1`
+- **godotopenxrvendors:** `4.3.0`
+- **Hardware:** Meta Quest 3 (or compatible Android XR device).
+- **Android toolchain:** SDK/NDK installed (Android Studio is fine).
+- **Connection:** USB-C or wireless debugging.
 
-### 2. Mandatory Setup Steps
-1.  Clone or download this repository.
-2.  Open the project in Godot Engine.
-3.  Open the **AssetLib** tab (top of the editor) and search for/install:
-	*   **Godot XR Tools** (Essential XR utilities).
-	*   **Godot OpenXR Vendors** (Critical for Meta/Pico/AndroidXR specific features).
-4.  Go to `Project` -> `Project Settings` -> `Plugins` and **Enable** the **Godot XR Tools** plugin.
-	*   *Note: The **Godot OpenXR Vendors** plugin is a GDExtension and is loaded automatically; it does not appear in the plugins list.*
-5.  Go to `Project` -> `Reload Current Project`.
-6.  Go to `Project` -> `Install Android Build Template...`.
-7.  Check the Action Map: Go to `Project Settings` -> `XR` -> `OpenXR` and ensure the **Default Action Map** is set to `res://xr_config/openxr_action_map.tres`.
+### 2. Setup steps
+1. Clone this repository.
+2. Open the project in Godot.
+3. Install from AssetLib (or release zip):
+   - **Godot XR Tools**: https://github.com/GodotVR/godot-xr-tools/releases
+   - **Godot OpenXR Vendors**: https://github.com/GodotVR/godot_openxr_vendors/releases
+4. Enable `Godot XR Tools` from `Project -> Project Settings -> Plugins`.
+5. Reload project.
+6. Install Android build templates (`Project -> Install Android Build Template...`).
+7. Verify action map in `Project Settings -> XR -> OpenXR`:
+   - `res://xr_config/openxr_action_map.tres`
 
-### 3. Exporting to Android / Quest
-1.  Go to `Project` -> `Export`.
-2.  An Android preset is already configured.
-3.  Ensure **XR Mode** is set to **OpenXR**.
-4.  Under the **OpenXR** section, select your target vendor (e.g., *Meta Quest*).
-	*   *Note: As Android XR devices (Samsung) become available, simply switch the vendor target here without rewriting the code.*
+Note: `godotopenxrvendors` is a GDExtension, so it is not enabled through the Plugins tab.
 
----
+### 3. Android / Quest export
+1. Open `Project -> Export`.
+2. Use Android preset (already present in the project).
+3. Ensure **XR Mode = OpenXR**.
+4. Under OpenXR vendor options, select the runtime target you want for that export.
 
-## 🤖 The Future: Android XR & Galaxy XR
+## 🔭 Current baseline
 
-With the release of Godot 4.5, support for **Android XR** has been integrated into the OpenXR Vendors plugin.
+- Engine baseline: **Godot 4.6.1**
+- Vendors plugin baseline: **godotopenxrvendors 4.3.0**
+- Plugin changelog snapshot: `addons/godotopenxrvendors/GodotOpenXRVendors_CHANGES.md`
 
-This workshop demonstrates an architecture that is not "locked" to a single headset. The demo scenes use standard OpenXR nodes. This means that as Samsung releases the **Galaxy XR** and Google pushes the **Project Aura** ecosystem, this project can be deployed to those devices with minimal configuration changes, ensuring your XR skills remain relevant across the entire industry.
+## 📄 Resources & credits
 
-## 📄 Resources & Credits
-*   **Presentation Slides:** [Download PDF](./docs/presentation.pdf)
-*   **3D Assets:** [Kenney.nl](https://kenney.nl/) (CC0 License).
-*   **Original Code:** Developed by Suggesto S.r.l.
+- **Presentation slides:** [Download PDF](./docs/presentation-sfscon-openxr-godot.pdf)
+- **3D assets:** [Kenney.nl](https://kenney.nl/) (CC0 License)
+- **Original code:** Suggesto S.r.l.
 
----
-*For more information on Godot XR, visit the [Official Documentation](https://docs.godotengine.org/en/stable/tutorials/xr/index.html).*
+For more information on Godot XR, see the official docs: https://docs.godotengine.org/en/stable/tutorials/xr/index.html

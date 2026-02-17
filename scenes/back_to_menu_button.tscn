@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cmfs305atqxq7"]
+
+[ext_resource type="Script" uid="uid://cnjnkjmv68hcf" path="res://scenes/back_to_menu_button.gd" id="1_chggs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_button"]
+size = Vector3(0.38, 0.18060547, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_button"]
+albedo_color = Color(0.1764706, 0.24705882, 0.34509805, 1)
+roughness = 0.45
+
+[sub_resource type="BoxMesh" id="BoxMesh_button"]
+size = Vector3(0.6, 0.2, 0.02)
+
+[node name="BackToMenuButton" type="Node3D" unique_id=2006466573]
+script = ExtResource("1_chggs")
+
+[node name="BackButtonArea" type="Area3D" parent="." unique_id=563176502]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackButtonArea" unique_id=785425554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.030302735, 0)
+shape = SubResource("BoxShape3D_button")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="BackButtonArea" unique_id=232242301]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03156559, 0)
+material_override = SubResource("StandardMaterial3D_button")
+mesh = SubResource("BoxMesh_button")
+
+[node name="ButtonLabel" type="Label3D" parent="BackButtonArea" unique_id=1988403385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0117394775, -0.0008499017, 0.025)
+pixel_size = 0.0017
+text = "Main Menu"
+
+[node name="HintLabel" type="Label3D" parent="." unique_id=2012909354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0005515963, -0.09408051, 0.01)
+pixel_size = 0.0014
+text = "Look at button + pinch"

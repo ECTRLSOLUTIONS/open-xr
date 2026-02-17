@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnv4uit1yuedy"]
+
+[ext_resource type="Script" path="res://addons/glb_viewer/glb_viewer_dock.gd" id="1_q77ss"]
+
+[node name="GlbViewerDock" type="Control"]
+script = ExtResource("1_q77ss")

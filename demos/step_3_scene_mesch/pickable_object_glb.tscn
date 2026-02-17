@@ -3,13 +3,14 @@
 [ext_resource type="PackedScene" uid="uid://cb45yqu1cg7d3" path="res://assets/prototype-kit/animal-bison.glb" id="1_pav2x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pav2x"]
-size = Vector3(0.1, 0.1, 0.1)
+size = Vector3(0.084, 0.072, 0.051916502)
 
 [node name="PickableObject" type="RigidBody3D"]
 freeze = true
 freeze_mode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03725183, -0.0014221221)
 shape = SubResource("BoxShape3D_pav2x")
 
 [node name="animal-bison2" parent="." instance=ExtResource("1_pav2x")]

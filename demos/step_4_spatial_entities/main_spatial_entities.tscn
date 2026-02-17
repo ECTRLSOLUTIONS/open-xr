@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://mm57cx0qta7d"]
+
+[ext_resource type="Script" uid="uid://cslkv0xhx0av2" path="res://demos/step_4_spatial_entities/main_spatial_entities.gd" id="1_kbw0m"]
+[ext_resource type="Script" uid="uid://byl45wkb3l8vg" path="res://demos/step_4_spatial_entities/qr_spatial_manager.gd" id="2_u1d3g"]
+[ext_resource type="PackedScene" path="res://demos/step_4_spatial_entities/qr_marker_anchor.tscn" id="3_ef1xq"]
+[ext_resource type="PackedScene" uid="uid://cmfs305atqxq7" path="res://scenes/back_to_menu_button.tscn" id="4_tyxgo"]
+
+[sub_resource type="Environment" id="Environment_transparent"]
+ambient_light_energy = 0.1
+
+[node name="XROrigin3D" type="XROrigin3D" unique_id=681490783]
+script = ExtResource("1_kbw0m")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1143976147]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1066854290]
+environment = SubResource("Environment_transparent")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=131086969]
+transform = Transform3D(1, 0, 0, 0, 0.945519, 0.325568, 0, -0.325568, 0.945519, 0, 2.2, 0)
+light_energy = 0.3
+
+[node name="QRSpatialManager" type="Node3D" parent="." unique_id=1511405786]
+script = ExtResource("2_u1d3g")
+marker_tracker_scene = ExtResource("3_ef1xq")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=954538889]
+
+[node name="Panel" type="PanelContainer" parent="CanvasLayer" unique_id=1623573888]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 520.0
+offset_bottom = 210.0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/Panel" unique_id=516561685]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=1283601606]
+layout_mode = 2
+text = "Demo 4 - Spatial Entities QR Anchor"
+
+[node name="Status" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=1231409754]
+layout_mode = 2
+text = "State: SEARCHING"
+
+[node name="Details" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=535341676]
+layout_mode = 2
+text = "Point headset camera to a printed QR code"
+autowrap_mode = 3
+
+[node name="Spacer" type="HSeparator" parent="CanvasLayer/Panel/VBox" unique_id=1340001977]
+layout_mode = 2
+
+[node name="Help" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=1151048733]
+layout_mode = 2
+text = "Keyboard: R = Reset Anchor, H = Show/Hide Models"
+
+[node name="Buttons" type="HBoxContainer" parent="CanvasLayer/Panel/VBox" unique_id=867764576]
+layout_mode = 2
+
+[node name="ResetAnchor" type="Button" parent="CanvasLayer/Panel/VBox/Buttons" unique_id=1164005374]
+layout_mode = 2
+text = "Reset Anchor"
+
+[node name="ToggleModels" type="Button" parent="CanvasLayer/Panel/VBox/Buttons" unique_id=1611763415]
+layout_mode = 2
+text = "Hide Models"
+
+[node name="BackToMenuButton" parent="." unique_id=148657571 instance=ExtResource("4_tyxgo")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.0851812, 1.0638323, 0)

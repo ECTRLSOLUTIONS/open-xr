@@ -1,10 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://dqsrh441corjg"]
+[gd_scene format=3 uid="uid://dqsrh441corjg"]
 
 [ext_resource type="Script" uid="uid://dj5lxrwka423l" path="res://demos/step_3_scene_mesch/main_scene_mesh.gd" id="1_ddrjv"]
 [ext_resource type="PackedScene" uid="uid://lrjxbj7j3h3p" path="res://demos/step_3_scene_mesch/pickable_object_glb.tscn" id="2_b5nx7"]
 [ext_resource type="PackedScene" uid="uid://5mibalw1o2jc" path="res://demos/step_3_scene_mesch/pickable_object_sphere.tscn" id="3_fr0qt"]
 [ext_resource type="PackedScene" uid="uid://cmqub5mjoln3a" path="res://assets/prototype-kit/animal-dog_pickable.tscn" id="4_cphvq"]
+[ext_resource type="PackedScene" uid="uid://dyf30kh4pab0a" path="res://assets/poli-pizza-platformer-pack/Chest.glb" id="6_ygkex"]
 [ext_resource type="PackedScene" uid="uid://cqe6cgd85pw66" path="res://demos/step_3_scene_mesch/SpatialEntity.tscn" id="7_kpino"]
+[ext_resource type="PackedScene" uid="uid://00dhchqb6qr5" path="res://assets/poli-pizza-platformer-pack/Saw Blade.glb" id="7_ts0iy"]
+[ext_resource type="PackedScene" uid="uid://pcrbyjklw4b1" path="res://assets/poli-pizza-platformer-pack/Tower.glb" id="8_r3yey"]
+[ext_resource type="PackedScene" uid="uid://cmfs305atqxq7" path="res://scenes/back_to_menu_button.tscn" id="9_2ebn1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yu5ic"]
 
@@ -17,21 +21,21 @@ sky_custom_fov = 31.3
 ambient_light_color = Color(0.8418729, 0.34854493, 0.20999295, 1)
 ambient_light_energy = 15.7
 
-[node name="XROrigin3D" type="XROrigin3D" node_paths=PackedStringArray("pickables_container")]
+[node name="XROrigin3D" type="XROrigin3D" unique_id=198152057 node_paths=PackedStringArray("pickables_container")]
 script = ExtResource("1_ddrjv")
 pickables_container = NodePath("Pickable")
 metadata/_edit_lock_ = true
 
-[node name="XRCamera3D" type="XRCamera3D" parent="."]
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1717349480]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.395803)
 
-[node name="XRNode3D_Right" type="XRNode3D" parent="."]
+[node name="XRNode3D_Right" type="XRNode3D" parent="." unique_id=409093475]
 tracker = &"/user/hand_tracker/right"
 show_when_tracked = true
 
-[node name="Skeleton3D" type="Skeleton3D" parent="XRNode3D_Right"]
+[node name="Skeleton3D" type="Skeleton3D" parent="XRNode3D_Right" unique_id=93317901]
 
-[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D_Right/Skeleton3D"]
+[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D_Right/Skeleton3D" unique_id=102212620]
 hand = 1
 material = SubResource("StandardMaterial3D_yu5ic")
 bones/0/name = "RightPalm"
@@ -61,41 +65,60 @@ bones/23/name = "RightLittleIntermediate"
 bones/24/name = "RightLittleDistal"
 bones/25/name = "RightLittleTip"
 
-[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D_Right/Skeleton3D/OpenXRFbHandTrackingMesh"]
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D_Right/Skeleton3D/OpenXRFbHandTrackingMesh" unique_id=1225173201]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00320235, 0, 0)
 hand_tracker = &"/user/hand_tracker/right"
 
-[node name="XRNode3D_Left" type="XRNode3D" parent="."]
+[node name="XRNode3D_Left" type="XRNode3D" parent="." unique_id=1869001429]
 tracker = &"/user/hand_tracker/left"
 show_when_tracked = true
 
-[node name="Skeleton3D" type="Skeleton3D" parent="XRNode3D_Left"]
+[node name="Skeleton3D" type="Skeleton3D" parent="XRNode3D_Left" unique_id=2041454763]
 
-[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D_Left/Skeleton3D"]
+[node name="OpenXRFbHandTrackingMesh" type="OpenXRFbHandTrackingMesh" parent="XRNode3D_Left/Skeleton3D" unique_id=117743791]
 material = SubResource("StandardMaterial3D_yu5ic")
 
-[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D_Left/Skeleton3D/OpenXRFbHandTrackingMesh"]
+[node name="XRHandModifier3D" type="XRHandModifier3D" parent="XRNode3D_Left/Skeleton3D/OpenXRFbHandTrackingMesh" unique_id=1819290777]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00320235, 0, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1557798550]
 environment = SubResource("Environment_yu5ic")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=855372153]
 transform = Transform3D(1, 0, 0, 0, 0.833495, 0.552527, 0, -0.552527, 0.833495, 0, 2.29466, 0)
 
-[node name="Pickable" type="Node3D" parent="."]
+[node name="Pickable" type="Node3D" parent="." unique_id=1888230792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.5)
 
-[node name="PickableObject_Glb" parent="Pickable" instance=ExtResource("2_b5nx7")]
+[node name="PickableObject_Glb" parent="Pickable" unique_id=1469573082 instance=ExtResource("2_b5nx7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0)
+visible = false
 
-[node name="PickableObject_Sphere" parent="Pickable" instance=ExtResource("3_fr0qt")]
+[node name="PickableObject_bison" parent="Pickable" unique_id=505537410 instance=ExtResource("2_b5nx7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.16238186)
+
+[node name="PickableObject_Sphere" parent="Pickable" unique_id=2045485060 instance=ExtResource("3_fr0qt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39086556, 0.28985226)
 
-[node name="animal-dog_pickable" parent="Pickable" instance=ExtResource("4_cphvq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30593395, 0, 0.59251297)
+[node name="animal-dog_pickable" parent="Pickable" unique_id=500510958 instance=ExtResource("4_cphvq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21854115, 0, 0.28439492)
 
-[node name="OpenXRFbSpatialAnchorManager" type="OpenXRFbSpatialAnchorManager" parent="."]
+[node name="pp_stag" parent="Pickable" unique_id=1452487706 instance=ExtResource("4_cphvq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47245774, 0, 0.28439492)
 
-[node name="OpenXRFbSceneManager" type="OpenXRFbSceneManager" parent="."]
+[node name="OpenXRFbSpatialAnchorManager" type="OpenXRFbSpatialAnchorManager" parent="." unique_id=522287057]
+
+[node name="OpenXRFbSceneManager" type="OpenXRFbSceneManager" parent="." unique_id=1199764238]
 default_scene = ExtResource("7_kpino")
+
+[node name="Root Scene" parent="." unique_id=1719306933 instance=ExtResource("6_ygkex")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.058031082, -0.03236717, -0.57942164)
+
+[node name="Root Scene2" parent="." unique_id=746779911 instance=ExtResource("7_ts0iy")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.20982781, 0, 0.31250638)
+
+[node name="Root Scene3" parent="." unique_id=1041243335 instance=ExtResource("8_r3yey")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 10.384773, -0.1842556, -3.3473039)
+
+[node name="BackToMenuButton" parent="." unique_id=1389152708 instance=ExtResource("9_2ebn1")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.4340432, 1.0026159, 0)
