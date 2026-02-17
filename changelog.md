@@ -6,6 +6,8 @@
 - Add Demo 4 requirements draft for Spatial Entities + QR anchor in `demos/step_4_spatial_entities/requirements.md`.
 - Add initial Demo 4 implementation in `demos/step_4_spatial_entities/main_spatial_entities.tscn` with QR marker anchors and attached cube/sphere.
 - Update `todo.md` with next priorities for demo launcher, demo 3 physics mesh objects, and demo 4 requirements.
+- Refactor Demo 3 docs (`readme_prd.md`, `readme_roomscan.md`) to match the current implementation.
+- Remove unused Demo 3 legacy files (`RoomManager.*`, `main_mesh_backup.*`).
 
 ## 2025-12-01
 - First release.

@@ -1,6 +1,5 @@
 extends XROrigin3D
 
-@onready var cam := $XRCamera3D
 @onready var sm := $OpenXRFbSceneManager # Riferimento diretto al SceneManager
 
 @export var pickables_container: Node3D
@@ -87,7 +86,7 @@ func _physics_process(dt: float) -> void:
 			_grab_object(closest_obj, tip)
 
 	elif !pinch and grabbed:
-		_release_grab(tip, dt) # Passiamo tip e dt per calcolare velocità lancio
+		_release_grab()
 
 	if grabbed and current_grabbed_object:
 		# Calcola velocità istantanea per il lancio
@@ -124,7 +123,7 @@ func _grab_object(obj: RigidBody3D, tip_pos: Vector3):
 	obj.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 	obj.freeze = true 
 
-func _release_grab(tip_pos: Vector3 = Vector3.ZERO, dt: float = 0.0):
+func _release_grab():
 	if grabbed:
 		print("Main: Rilasciato oggetto")
 	grabbed = false
@@ -133,7 +132,6 @@ func _release_grab(tip_pos: Vector3 = Vector3.ZERO, dt: float = 0.0):
 		# La velocità è già stata impostata nel physics_process, quindi l'oggetto dovrebbe conservare il momento
 		current_grabbed_object = null
 		# Opzionale: dare un impulso basato sulla velocità della mano qui
-		current_grabbed_object = null
 
 func _setup_passthrough(xr):
 	# Setup base passthrough
