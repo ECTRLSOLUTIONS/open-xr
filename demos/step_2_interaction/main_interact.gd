@@ -16,6 +16,7 @@ func _ready():
 	var xr_interface := XRServer.find_interface("OpenXR")
 	if xr_interface and xr_interface.is_initialized():
 		get_viewport().use_xr = true
+		get_viewport().physics_object_picking = false
 		_setup_passthrough(xr_interface)
 	
 	# Initialize pickables

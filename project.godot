@@ -107,3 +107,4 @@ openxr/extensions/htc/passthrough=true
 openxr/extensions/meta/anchor_api=true
 openxr/extensions/meta/anchor_sharing=true
 openxr/extensions/spatial_entity=true
+openxr/extensions/meta/color_space/starting_color_space=3

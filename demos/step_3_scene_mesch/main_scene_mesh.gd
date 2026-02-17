@@ -4,13 +4,20 @@ extends XROrigin3D
 
 @export var pickables_container: Node3D
 @export var hand_path    := "/user/hand_tracker/right"
+@export var force_scene_capture_on_start := false
+@export var animated_model_path: NodePath = NodePath("Pickable/pp_stag")
+@export var animated_model_idle_animation := "Idle"
+@export var animated_model_loop := true
 
 # Variabili per interazione (ereditate dallo step 2)
 const FREEZE_KIN  := RigidBody3D.FreezeMode.FREEZE_MODE_KINEMATIC
+const ROOM_LOAD_TIMEOUT_SEC := 1.5
+const CAPTURE_ANCHOR_TIMEOUT_SEC := 3.0
 var current_grabbed_object: RigidBody3D = null
 var grabbed = false
 var grab_off = Vector3.ZERO
 var anchors_ready = false
+var scan_requested = false
 
 func _init():
 	print("Main: _init chiamato. L'applicazione sta partendo.")
@@ -20,34 +27,68 @@ func _ready():
 	var xr_interface := XRServer.find_interface("OpenXR")
 	if xr_interface and xr_interface.is_initialized():
 		get_viewport().use_xr = true
+		get_viewport().physics_object_picking = false
 		_setup_passthrough(xr_interface)
 		
-		# Logica copiata da main_working.gd
-		_rescan_room()
-		sm.openxr_fb_scene_data_missing.connect(sm.request_scene_capture)
+		sm.openxr_fb_scene_data_missing.connect(_on_scene_data_missing)
 		sm.openxr_fb_scene_capture_completed.connect(_on_scan_done)
+		if force_scene_capture_on_start:
+			_request_scene_capture("forced on start")
+		else:
+			_try_load_existing_room()
+		_start_model_idle_animation()
 	else:
 		_setup_pickables()
 
-func _rescan_room():
-	print("Main: Rescan room...")
-	if sm.has_method("destroy_scene_anchors"): 
-		sm.destroy_scene_anchors()
-	elif sm.has_method("remove_scene_anchors"):
-		sm.remove_scene_anchors()
-		
+func _try_load_existing_room() -> void:
+	print("Main: Trying to load existing room data...")
+	var result = sm.create_scene_anchors()
+	print("Main: create_scene_anchors result: ", result)
+	
+	if result == ERR_ALREADY_EXISTS:
+		anchors_ready = true
+		_on_room_ready()
+		return
+	
+	await _wait_for_anchors_or_timeout(ROOM_LOAD_TIMEOUT_SEC)
+	if sm.are_scene_anchors_created():
+		anchors_ready = true
+		_on_room_ready()
+	else:
+		print("Main: No anchors after timeout.")
+		_request_scene_capture("no anchors loaded")
+
+func _request_scene_capture(reason: String) -> void:
+	if anchors_ready or scan_requested:
+		return
+	scan_requested = true
+	print("Main: Requesting scene capture (%s)..." % reason)
 	sm.request_scene_capture()
+
+func _on_scene_data_missing() -> void:
+	_request_scene_capture("room data missing")
 
 func _on_scan_done(ok):
 	print("Main: Scan done. Success: ", ok)
-	if ok and !anchors_ready:
+	scan_requested = false
+	if not ok:
+		push_warning("Main: Scene capture failed or canceled.")
+		return
+	
+	sm.create_scene_anchors()
+	await _wait_for_anchors_or_timeout(CAPTURE_ANCHOR_TIMEOUT_SEC)
+	if sm.are_scene_anchors_created() and !anchors_ready:
 		anchors_ready = true
-		sm.create_scene_anchors()
-		await _anchors_created()
 		_on_room_ready()
+	else:
+		push_warning("Main: Capture completed, but scene anchors are not ready yet.")
 
-func _anchors_created():
+func _wait_for_anchors_or_timeout(timeout_sec: float) -> void:
+	var start_sec := Time.get_ticks_msec() / 1000.0
 	while !sm.are_scene_anchors_created():
+		var elapsed := (Time.get_ticks_msec() / 1000.0) - start_sec
+		if elapsed >= timeout_sec:
+			return
 		await get_tree().process_frame
 
 func _on_room_ready():
@@ -142,3 +183,36 @@ func _setup_passthrough(xr):
 	get_viewport().transparent_bg = true
 	$WorldEnvironment.environment.background_mode = Environment.BG_COLOR
 	$WorldEnvironment.environment.background_color = Color(0,0,0,0)
+
+func _start_model_idle_animation() -> void:
+	var model := get_node_or_null(animated_model_path)
+	if not model:
+		return
+
+	var anim_player := _find_animation_player(model)
+	if not anim_player:
+		return
+
+	var animation_name := animated_model_idle_animation
+	if not anim_player.has_animation(animation_name):
+		var animations := anim_player.get_animation_list()
+		if animations.is_empty():
+			return
+		animation_name = animations[0]
+
+	var anim := anim_player.get_animation(animation_name)
+	if anim and animated_model_loop:
+		anim.loop_mode = Animation.LOOP_LINEAR
+
+	anim_player.play(animation_name)
+
+func _find_animation_player(node: Node) -> AnimationPlayer:
+	if node is AnimationPlayer:
+		return node as AnimationPlayer
+
+	for child in node.get_children():
+		var found := _find_animation_player(child)
+		if found:
+			return found
+
+	return null

@@ -8,6 +8,10 @@
 - Update `todo.md` with next priorities for demo launcher, demo 3 physics mesh objects, and demo 4 requirements.
 - Refactor Demo 3 docs (`readme_prd.md`, `readme_roomscan.md`) to match the current implementation.
 - Remove unused Demo 3 legacy files (`RoomManager.*`, `main_mesh_backup.*`).
+- Set Meta OpenXR color space project setting to `REC709` to remove startup warning.
+- Disable `physics_object_picking` in XR scenes to avoid stereo object-picking warning.
+- Update Demo 3 room-loading flow: try existing anchors first, request scene capture only when data is missing.
+- Add Demo 3 capture fallback if anchors are not loaded after timeout, plus `force_scene_capture_on_start` option.
 
 ## 2025-12-01
 - First release.
