@@ -92,8 +92,7 @@ transform = Transform3D(1, 0, 0, 0, 0.833495, 0.552527, 0, -0.552527, 0.833495, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.5)
 
 [node name="PickableObject_Glb" parent="Pickable" unique_id=1469573082 instance=ExtResource("2_b5nx7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37412268, 0, 0)
 
 [node name="PickableObject_bison" parent="Pickable" unique_id=505537410 instance=ExtResource("2_b5nx7")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.24801332, 0.21099997, 0.162)

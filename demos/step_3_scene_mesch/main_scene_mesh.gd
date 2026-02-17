@@ -8,6 +8,9 @@ extends XROrigin3D
 @export var animated_model_path: NodePath = NodePath("Pickable/pp_stag")
 @export var animated_model_idle_animation := "Idle"
 @export var animated_model_loop := true
+@export_range(0.05, 0.8, 0.01) var animated_model_touch_distance := 0.18
+@export_range(1, 10, 1) var animated_model_random_plays := 3
+@export_range(0.0, 3.0, 0.1) var animated_model_trigger_cooldown_sec := 0.8
 
 # Variabili per interazione (ereditate dallo step 2)
 const FREEZE_KIN  := RigidBody3D.FreezeMode.FREEZE_MODE_KINEMATIC
@@ -18,12 +21,24 @@ var grabbed = false
 var grab_off = Vector3.ZERO
 var anchors_ready = false
 var scan_requested = false
+var _animated_model: Node3D = null
+var _animated_model_anim_player: AnimationPlayer = null
+var _idle_animation_name := ""
+var _random_animation_names: Array[String] = []
+var _pending_random_animations: Array[String] = []
+var _animated_model_mesh_nodes: Array[MeshInstance3D] = []
+var _animation_sequence_running := false
+var _is_touching_animated_model := false
+var _next_animation_trigger_sec := 0.0
+var _last_random_animation := ""
+var _rng := RandomNumberGenerator.new()
 
 func _init():
 	print("Main: _init chiamato. L'applicazione sta partendo.")
 
 func _ready():
 	print("Main: _ready chiamato.")
+	_rng.randomize()
 	var xr_interface := XRServer.find_interface("OpenXR")
 	if xr_interface and xr_interface.is_initialized():
 		get_viewport().use_xr = true
@@ -36,7 +51,7 @@ func _ready():
 			_request_scene_capture("forced on start")
 		else:
 			_try_load_existing_room()
-		_start_model_idle_animation()
+		_setup_animated_model()
 	else:
 		_setup_pickables()
 
@@ -107,6 +122,7 @@ func _physics_process(dt: float) -> void:
 	# --- Logica di interazione (identica allo step 2) ---
 	var tracker := XRServer.get_tracker(hand_path) as XRHandTracker
 	if !tracker or !tracker.has_tracking_data:
+		_is_touching_animated_model = false
 		_release_grab()
 		return
 
@@ -117,6 +133,7 @@ func _physics_process(dt: float) -> void:
 	# Converti in globali per interagire con gli oggetti nel mondo
 	var tip = to_global(tip_local)
 	var thumb = to_global(thumb_local)
+	_handle_animated_model_touch(tip)
 	
 	var pinch_dist = tip.distance_to(thumb)
 	var pinch: bool = pinch_dist < 0.035
@@ -184,27 +201,155 @@ func _setup_passthrough(xr):
 	$WorldEnvironment.environment.background_mode = Environment.BG_COLOR
 	$WorldEnvironment.environment.background_color = Color(0,0,0,0)
 
-func _start_model_idle_animation() -> void:
-	var model := get_node_or_null(animated_model_path)
-	if not model:
+func _setup_animated_model() -> void:
+	_animated_model = get_node_or_null(animated_model_path) as Node3D
+	if not _animated_model:
+		push_warning("Main: Animated model not found at path %s" % animated_model_path)
 		return
 
-	var anim_player := _find_animation_player(model)
-	if not anim_player:
+	_animated_model_anim_player = _find_animation_player(_animated_model)
+	if not _animated_model_anim_player:
+		push_warning("Main: AnimationPlayer not found under animated model.")
+		return
+	
+	_animated_model_mesh_nodes.clear()
+	_collect_mesh_instances(_animated_model, _animated_model_mesh_nodes)
+
+	var animations: PackedStringArray = _animated_model_anim_player.get_animation_list()
+	if animations.is_empty():
+		push_warning("Main: Animated model has no animations.")
 		return
 
-	var animation_name := animated_model_idle_animation
-	if not anim_player.has_animation(animation_name):
-		var animations := anim_player.get_animation_list()
-		if animations.is_empty():
-			return
-		animation_name = animations[0]
+	_idle_animation_name = animated_model_idle_animation
+	if not _animated_model_anim_player.has_animation(_idle_animation_name):
+		_idle_animation_name = String(animations[0])
 
-	var anim := anim_player.get_animation(animation_name)
-	if anim and animated_model_loop:
-		anim.loop_mode = Animation.LOOP_LINEAR
+	_random_animation_names.clear()
+	for animation_name in animations:
+		var name := String(animation_name)
+		if name != _idle_animation_name:
+			_random_animation_names.append(name)
+	
+	print("Main: Animated model ready. Idle=", _idle_animation_name, " Random animations=", _random_animation_names)
 
-	anim_player.play(animation_name)
+	_play_idle_animation()
+
+func _handle_animated_model_touch(tip_position: Vector3) -> void:
+	if not _animated_model_anim_player or not _animated_model:
+		return
+
+	var is_touching_now := _is_tip_near_animated_model(tip_position)
+	if is_touching_now and not _is_touching_animated_model:
+		var now_sec := Time.get_ticks_msec() / 1000.0
+		if now_sec >= _next_animation_trigger_sec and not _animation_sequence_running:
+			_trigger_random_animation_sequence()
+
+	_is_touching_animated_model = is_touching_now
+
+func _trigger_random_animation_sequence() -> void:
+	if _random_animation_names.is_empty():
+		print("Main: No random animations available (only idle or single animation).")
+		return
+
+	_animation_sequence_running = true
+	_next_animation_trigger_sec = Time.get_ticks_msec() / 1000.0 + animated_model_trigger_cooldown_sec
+	_pending_random_animations = _build_random_animation_sequence(maxi(animated_model_random_plays, 1))
+	_play_next_random_animation()
+
+func _build_random_animation_sequence(count: int) -> Array[String]:
+	var sequence: Array[String] = []
+	var previous: String = _last_random_animation
+	var pool: Array[String] = _random_animation_names.duplicate()
+
+	for i in range(count):
+		if pool.is_empty():
+			pool = _random_animation_names.duplicate()
+		if pool.is_empty():
+			break
+
+		var candidates: Array[String] = []
+		for name in pool:
+			if pool.size() == 1 or name != previous:
+				candidates.append(name)
+
+		if candidates.is_empty():
+			candidates = pool.duplicate()
+		if candidates.is_empty():
+			break
+
+		var selected_index: int = _rng.randi_range(0, candidates.size() - 1)
+		var selected_name: String = candidates[selected_index]
+		sequence.append(selected_name)
+		previous = selected_name
+		pool.erase(selected_name)
+
+	return sequence
+
+func _play_next_random_animation() -> void:
+	if not _animated_model_anim_player:
+		_animation_sequence_running = false
+		return
+
+	if _pending_random_animations.is_empty():
+		_play_idle_animation()
+		_animation_sequence_running = false
+		return
+
+	var animation_name: String = _pending_random_animations[0]
+	_pending_random_animations.remove_at(0)
+	_last_random_animation = animation_name
+
+	if not _animated_model_anim_player.has_animation(animation_name):
+		_play_next_random_animation()
+		return
+
+	var animation: Animation = _animated_model_anim_player.get_animation(animation_name)
+	if not animation:
+		_play_next_random_animation()
+		return
+
+	animation.loop_mode = Animation.LOOP_NONE
+	_animated_model_anim_player.play(animation_name)
+
+	var wait_time: float = maxf(animation.length, 0.05)
+	var timer: SceneTreeTimer = get_tree().create_timer(wait_time)
+	timer.timeout.connect(_on_random_animation_step_finished, CONNECT_ONE_SHOT)
+
+func _on_random_animation_step_finished() -> void:
+	_play_next_random_animation()
+
+func _play_idle_animation() -> void:
+	if not _animated_model_anim_player:
+		return
+	if _idle_animation_name == "":
+		return
+	if not _animated_model_anim_player.has_animation(_idle_animation_name):
+		return
+
+	var animation: Animation = _animated_model_anim_player.get_animation(_idle_animation_name)
+	if animation and animated_model_loop:
+		animation.loop_mode = Animation.LOOP_LINEAR
+	_animated_model_anim_player.play(_idle_animation_name)
+
+func _is_tip_near_animated_model(tip_position: Vector3) -> bool:
+	if not _animated_model:
+		return false
+
+	if tip_position.distance_to(_animated_model.global_transform.origin) <= animated_model_touch_distance:
+		return true
+
+	for mesh in _animated_model_mesh_nodes:
+		if mesh and tip_position.distance_to(mesh.global_transform.origin) <= animated_model_touch_distance:
+			return true
+
+	return false
+
+func _collect_mesh_instances(node: Node, out_meshes: Array[MeshInstance3D]) -> void:
+	if node is MeshInstance3D:
+		out_meshes.append(node as MeshInstance3D)
+
+	for child in node.get_children():
+		_collect_mesh_instances(child, out_meshes)
 
 func _find_animation_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
