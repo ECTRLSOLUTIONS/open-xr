@@ -10,7 +10,7 @@ albedo_color = Color(0.1764706, 0.24705882, 0.34509805, 1)
 roughness = 0.45
 
 [sub_resource type="BoxMesh" id="BoxMesh_button"]
-size = Vector3(0.6, 0.2, 0.02)
+size = Vector3(0.8, 0.2, 0.02)
 
 [node name="BackToMenuButton" type="Node3D" unique_id=2006466573]
 script = ExtResource("1_chggs")

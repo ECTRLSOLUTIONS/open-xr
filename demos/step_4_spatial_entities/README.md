@@ -10,15 +10,11 @@ Run:
 - Detects marker trackers (`OpenXRMarkerTracker`) exposed by runtime.
 - Instantiates an `XRAnchor3D` scene for each detected marker.
 - Attaches a cube and sphere to that anchor.
-- Shows state UI: `SEARCHING`, `DETECTED`, `ANCHORED`, `TRACKING LOST`.
+- Shows a 3D instruction sign in world space.
+- Hides the 3D sign as soon as a marker is detected/anchored.
 
 ## Controls
-- UI buttons in the panel:
-  - `Reset Anchor`
-  - `Hide/Show Models`
-- Keyboard fallback:
-  - `R` reset
-  - `H` hide/show models
+- Use the `Main Menu` 3D button to go back to the launcher.
 
 ## Required project settings
 Already configured in `project.godot`:
